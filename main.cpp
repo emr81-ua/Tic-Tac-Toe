@@ -87,6 +87,36 @@ public:
             border.setPosition(offsetX, offsetY);
             window.draw(border);
         }
+
+        // Dibujar ficha grande si el subtablero fue ganado
+        if (winner != Player::None) {
+            float centerX = offsetX + BOARD_SIZE / 2.f;
+            float centerY = offsetY + BOARD_SIZE / 2.f;
+
+            if (winner == Player::X) {
+                sf::RectangleShape line1(sf::Vector2f(BOARD_SIZE * 0.8f, 10));
+                line1.setFillColor(sf::Color(255, 0, 0, 150)); // rojo semitransparente
+                line1.setOrigin(line1.getSize().x / 2, 5);
+                line1.setPosition(centerX, centerY);
+                line1.setRotation(45);
+
+                sf::RectangleShape line2 = line1;
+                line2.setRotation(-45);
+
+                window.draw(line1);
+                window.draw(line2);
+            }
+            else if (winner == Player::O) {
+                sf::CircleShape circle(BOARD_SIZE * 0.4f);
+                circle.setFillColor(sf::Color::Transparent);
+                circle.setOutlineColor(sf::Color(0, 0, 255, 150)); // azul semitransparente
+                circle.setOutlineThickness(10);
+                circle.setOrigin(circle.getRadius(), circle.getRadius());
+                circle.setPosition(centerX, centerY);
+                window.draw(circle);
+            }
+        }
+
     }
 
     Player getWinner() const { return winner; }
@@ -134,10 +164,10 @@ public:
 
         if (activeBoard != -1) {
             if (subBoards[activeBoard].isFull() || subBoards[activeBoard].getWinner() != Player::None) {
-                activeBoard = -1; 
+                activeBoard = -1; // Permitir jugar en cualquier tablero
             }
             else if (subBoardIndex != activeBoard) {
-                return false; 
+                return false; // El clic no fue en el subtablero activo
             }
         }
 
